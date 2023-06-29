@@ -1,0 +1,4 @@
+2023-06-25 12:13:05,277 INFO File 'D:/alfa.notebook-store/src/main/resources/config.properties' has been loaded 
+2023-06-25 12:13:05,282 INFO Property 'userLastname' has value 'Maistrenko' 
+2023-06-25 12:13:05,913 INFO Connected to database successfully 
+2023-06-25 12:13:06,078 INFO Disconnected from database successfully 

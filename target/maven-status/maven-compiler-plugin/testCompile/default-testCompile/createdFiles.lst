@@ -1,0 +1,4 @@
+runner\CucumberRunner.class
+unitTests\Auth_APITest.class
+hooks\Hooks_new.class
+unitTests\DB_OperationsTests.class
