@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         features = "src/test/resources/features",
         glue = { "stepdefs", "hooks"},
-        tags = "(@smoke or @regression) and (not @slow)"
+        tags = "@web"
 )
 public class CucumberRunner {
 }

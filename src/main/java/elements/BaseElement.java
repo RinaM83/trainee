@@ -22,28 +22,29 @@ public class BaseElement {
         return wrappedElement;
     }
 
-//    public boolean isVisible() {
-//        this.logAction("Is visible");
-//        try {
-//            return getWrappedElement().isDisplayed();
-//        } catch (NoSuchElementException | StaleElementReferenceException e) {
-//            return false;
-//        }
-//    }
-//
-//    public boolean isNotVisible() {
-//        this.logAction("Is not visible");
-//        try {
-//            return !getWrappedElement().isDisplayed();
-//        } catch (NoSuchElementException | StaleElementReferenceException e) {
-//            return true;
-//        }
-//    }
-//
-//    public boolean isDisabled(){
-//        this.logAction("Is disabled");
-//        return getWrappedElement().is(Condition.disabled);
-//    }
+
+    public boolean isVisible() {
+        this.logAction("Is visible");
+        try {
+            return getWrappedElement().isDisplayed();
+        } catch (NoSuchElementException | StaleElementReferenceException e) {
+            return false;
+        }
+    }
+
+    public boolean isNotVisible() {
+        this.logAction("Is not visible");
+        try {
+            return !getWrappedElement().isDisplayed();
+        } catch (NoSuchElementException | StaleElementReferenceException e) {
+            return true;
+        }
+    }
+
+    public boolean isDisabled(){
+        this.logAction("Is disabled");
+        return getWrappedElement().is(Condition.disabled);
+    }
 
     protected void logAction(String action){
         Loggers.trace(String.format("[%s] %s - %s",

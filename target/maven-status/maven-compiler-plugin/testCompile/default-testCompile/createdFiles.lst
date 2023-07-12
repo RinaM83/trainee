@@ -1,4 +1,6 @@
+stepdefs\ProductPageStepdefs.class
 runner\CucumberRunner.class
-unitTests\Auth_APITest.class
 hooks\Hooks_new.class
+unitTests\Auth_APITest.class
 unitTests\DB_OperationsTests.class
+stepdefs\BasketDropdownStepdefs.class

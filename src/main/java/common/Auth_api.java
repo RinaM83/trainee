@@ -1,19 +1,14 @@
 package common;
 
 import config.ConfigReader;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import static io.restassured.RestAssured.given;
+import utils.ApiUtils;
 
 public class Auth_api {
 
@@ -23,14 +18,19 @@ public class Auth_api {
 
     private String csrfToken;
     private String sessionValue;
+    private String redirectUrl;
+
+    private String xCsrfToken;
 
     public void auth(String username, String password) {
+
+        HTMLTokenExtractor tokenExtractor = new HTMLTokenExtractor();
+
         try {
-            RestAssured.config().getRedirectConfig().followRedirects(true);
-            RestAssured.baseURI = BASE_URL;
+            ApiUtils apiUtils = new ApiUtils(BASE_URL);
 
             // Отправляем GET-запрос на страницу авторизации
-            Response loginResponse = RestAssured.get(LOGIN_PATH);
+            Response loginResponse =apiUtils.get(LOGIN_PATH,new HashMap<>());
 
             // Получаем значение всех заголовков Set-Cookie из ответа сервера
             Headers loginHeaders = loginResponse.getHeaders();
@@ -46,25 +46,25 @@ public class Auth_api {
                     }
                 }
             }
-
             // Извлекаем CSRF токен из HTML-кода страницы авторизации
             String htmlBody = loginResponse.getBody().asString();
-            Document doc = Jsoup.parse(htmlBody);
-            csrfToken = doc.select("meta[name=csrf-token]").attr("content");
-
-//            System.out.println("csrfToken from GET " + csrfToken);
+            csrfToken = tokenExtractor.extractCsrfTokenFromHTML(htmlBody);
+            System.out.println("----HTML Token on the login page " + csrfToken);
 
             if (!csrfToken.isEmpty()) {
+                // Создаем параметры формы для POST-запроса
+                Map<String, Object> formParams = new HashMap<>();
+                formParams.put("LoginForm[username]", username);
+                formParams.put("LoginForm[password]", password);
+                formParams.put("LoginForm[rememberMe]", 1);
+                formParams.put("_csrf", csrfToken);
+
+                // Создаем заголовки запроса
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Referer", BASE_URL + LOGIN_PATH);
+
                 // Выполняем POST-запрос для аутентификации на сайте
-                Response authResponse = given()
-                        .cookies(cookies)
-                        .contentType(ContentType.URLENC)
-                        .formParam("LoginForm[username]", username)
-                        .formParam("LoginForm[password]", password)
-                        .formParam("LoginForm[rememberMe]", 1)
-                        .formParam("_csrf", csrfToken)
-                        .header("Referer", BASE_URL + LOGIN_PATH) // Добавляем заголовок Referer
-                        .post(LOGIN_PATH);
+                Response authResponse = apiUtils.post(LOGIN_PATH, formParams, headers, cookies);
 
                 int statusCode = authResponse.getStatusCode();
                 if (statusCode == 302) {
@@ -72,6 +72,8 @@ public class Auth_api {
                     Headers authHeaders = authResponse.getHeaders();
                     List<String> authSetCookieHeaders = authHeaders.getValues("Set-Cookie");
                     String locationHeader = authHeaders.getValue("Location");
+                    // Сохраняем URL-адрес перенаправления
+                    redirectUrl = locationHeader;
 
                     Map<String, String> authCookies = new HashMap<>();
                     for (String setCookieHeader : authSetCookieHeaders) {
@@ -83,47 +85,49 @@ public class Auth_api {
                         }
                     }
 
-                    // Выполняем GET-запрос на URL, на который был перенаправлен пользователь, чтобы получить дополнительные данные
-                    Response redirectResponse = RestAssured.given()
-                            .cookies(authCookies)
-                            .get(locationHeader);
-
-                    // Проверяем, что получили корректный ответ после перенаправления
+                    sessionValue = authCookies.get("PHPSESSID");
+                    csrfToken = authCookies.get("_csrf");
+                    // Выполняем GET-запрос на URL после перенаправления, чтобы убедиться, что все ок и получить токен
+                    Response redirectResponse = apiUtils.get(locationHeader,authCookies);
+                    // Проверяем, что перенаправление выполнено успешно
                     int redirectStatusCode = redirectResponse.getStatusCode();
                     if (redirectStatusCode == 200) {
-                        // Доступ к защищенным ресурсам теперь разрешен, можно продолжать работу с приложением
+                        // Все гуд, нужен токен для использования в остальных POST запросах на product page
                         String responseBody = redirectResponse.getBody().asString();
+                        xCsrfToken = tokenExtractor.extractCsrfTokenFromHTML(responseBody);
+                        System.out.println("----Токен из html после перенаправления на Product page: " + xCsrfToken);
                         logger.info("Authorization was successful");
-                        logger.debug("Response body after redirect -> {}", redirectResponse.getBody().asString());
-//                        System.out.println("Responce body after redirect -> " + responseBody);
+//                        logger.debug("Response body after redirect -> {}", redirectResponse.getBody().asString());
                     } else {
-//                        System.out.println("Error: Something goes wrong after redirect"); // Что-то пошло не так при аутентификации
                         logger.warn("Error: Something goes wrong after redirect. Redirect status code -> {}", redirectStatusCode); // Что-то пошло не так при аутентификации
                     }
                 } else {
-//                    System.err.println("Authorization failed. Server response code: " + statusCode);
                     logger.error("Authorization failed. Server response code -> {}", statusCode);
                 }
             } else {
-//                System.err.println("CSRF-token was not found on authorization page");
                 logger.error("CSRF-token was not found on authorization page");
                 return;
             }
-
-            // Получаем значение сессии из кук
-            Map<String, String> allCookies = loginResponse.getCookies();
-            sessionValue = allCookies.get("session");
-
         } catch (Exception e) {
             logger.error("An error occurred while trying to authenticate. Error message -> {}", e.getMessage());
         }
     }
+
     public String getCsrfToken() {
         return csrfToken;
+    }
+
+    public String getxCsrfToken() {
+        return xCsrfToken;
     }
 
     public String getSessionValue() {
         return sessionValue;
     }
+
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
 }
+
 

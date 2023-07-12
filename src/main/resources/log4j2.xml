@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="TRACE">
     <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
+        <Console name="STDOUT">
+            <PatternLayout pattern="%m %n"/>
         </Console>
         <RollingFile name="rollingFile"
                      fileName="logs/execution.log"
@@ -10,7 +10,7 @@
                      filePattern="logs/$${date:yyyy-MM}/execution-%d{MM-dd-yyyy}-%i.log.gz"
         >
             <PatternLayout>
-                <Pattern>%d %p %m %n</Pattern>
+                <Pattern>%d %p [%t] %m %n</Pattern>
             </PatternLayout>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
@@ -20,13 +20,9 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Root level="info">
-            <AppenderRef ref="Console"/>
+        <Root level="trace">
+            <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="rollingFile"/>
         </Root>
-        <Logger name="org.apache.logging.log4j" level="error" additivity="false">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="rollingFile"/>
-        </Logger>
     </Loggers>
 </Configuration>
