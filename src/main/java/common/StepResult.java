@@ -2,9 +2,11 @@ package common;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import utils.Loggers;
+
 public class StepResult {
 
-    private static final Logger logger = LogManager.getLogger(StepResult.class);
+//    private static final Logger logger = LogManager.getLogger(StepResult.class);
 
     private String userLastname;
     private String scenarioName;
@@ -22,7 +24,7 @@ public class StepResult {
         this.errorMessage = errorMessage;
 
         // Логгируем создание объекта StepResult
-        logger.info("Created new StepResult with userLastname={}, scenarioName={}, stepName={}, status={}, platform={} and errorMessage={}", userLastname, scenarioName, stepName, status, platform, errorMessage);
+       Loggers.info("Created new StepResult with userLastname={}, scenarioName={}, stepName={}, status={}, platform={} and errorMessage={}" + userLastname + scenarioName + stepName + status + platform + errorMessage);
     }
 
     public String getUserLastname() {
@@ -51,7 +53,7 @@ public class StepResult {
 
     public void setStatus(String status) {
         // Логгируем изменение статуса StepResult
-        logger.info("Updated status of StepResult with userLastName='{}', stepName='{}' and scenarioName='{}', platform='{}' to {}, errorMessage='{}'", userLastname, stepName, scenarioName, platform, status, errorMessage);
+        Loggers.info("Updated status of StepResult with userLastName='{}', stepName='{}' and scenarioName='{}', platform='{}' to {}, errorMessage='{}'" + userLastname + stepName + scenarioName + platform + status +errorMessage);
         this.status = status;
 
     }

@@ -10,6 +10,13 @@ public class BasketDropdownService {
     private final BasketDropdown basketDropdown= new BasketDropdown();
     private final NavBar navBar = new NavBar();
 
+    public void scrollToBasketIcon() {
+        navBar.getBasketIconButton().scrollIntoView();
+    }
+    public void scrollToBasketCounter() {
+        navBar.getBasketCounter().scrollIntoView();
+    }
+
     public void openBasketDropdown(){
         navBar.getBasketIconButton().click();
     }
@@ -26,7 +33,15 @@ public class BasketDropdownService {
         isVisible(softAssertions,basketDropdown.getBasketDropdown(),"Basket Dropdown");
     }
 
+//    public void isBasketItemsVisible(SoftAssertions softAssertions){
+//        isVisible(softAssertions, basketI);
+//
+//    }
 
+    public String getBasketCountValue(){
+        final String basketCounterValue;
+        return basketCounterValue = navBar.getBasketCounterValue();
+    }
 
     public void goToTheBasket(){
         basketDropdown.getGoToBasket().click();

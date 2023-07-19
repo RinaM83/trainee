@@ -28,6 +28,24 @@ public class ProductCard {
         productCounter.clearAndType(value);
     }
 
+    public void getProductTitleValue(){
+        productTitle.getElementText();
+    }
+
+    public void getProductCounterValue(){
+        productCounter.getElementText();
+    }
+
+    public boolean getProductTitleValue(String expectedValue) {
+        String actualValue = productTitle.getElementText();
+        return actualValue.equals(expectedValue);
+    }
+
+    public boolean getProductCountValue(String expectedValue){
+        String actualValue = productCounter.getElementText();
+        return actualValue.equals(expectedValue);
+    }
+
     public void buy(){
         buyBtn.click();
     }

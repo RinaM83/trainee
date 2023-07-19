@@ -22,6 +22,14 @@ public class BaseElement {
         return wrappedElement;
     }
 
+    public String getElementText() {
+        this.logAction("Get element text");
+        try {
+            return getWrappedElement().getText();
+        } catch (NoSuchElementException | StaleElementReferenceException e) {
+            return null;
+        }
+    }
 
     public boolean isVisible() {
         this.logAction("Is visible");
@@ -44,6 +52,11 @@ public class BaseElement {
     public boolean isDisabled(){
         this.logAction("Is disabled");
         return getWrappedElement().is(Condition.disabled);
+    }
+
+    public void scrollIntoView(){
+        this.logAction("Scroll into view");
+        getWrappedElement().scrollIntoView(true);
     }
 
     protected void logAction(String action){

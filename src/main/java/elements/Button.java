@@ -16,7 +16,6 @@ public class Button extends BaseElement{
     public void click(){
         this.logAction("Click");
         this.getWrappedElement()
-                .scrollIntoView(true)
                 .hover()
                 .click();
     }

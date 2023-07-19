@@ -31,6 +31,18 @@ public class BasketItem {
         return basketProductCount;
     }
 
+    public String basketProductTltValue(){
+        return basketProductTlt.getElementText();
+    }
+
+    public String basketProductPriceValue(){
+        return basketProductPrice.getElementText();
+    }
+
+    public String basketProductCountValue(){
+        return basketProductCount.getElementText();
+    }
+
     public void delete(){
         deleteProductBtn.click();
     }

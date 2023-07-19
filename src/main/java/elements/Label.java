@@ -21,7 +21,6 @@ public class Label extends BaseElement{
                 .shouldBe(Condition.visible, Duration.ofMillis(5000))
                 .isDisplayed();
     }
-
     public boolean isNotDisplayed(){
         this.logAction("Is not displayed");
         return this.getWrappedElement()

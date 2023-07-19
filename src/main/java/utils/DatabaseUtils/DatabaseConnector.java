@@ -7,8 +7,10 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import utils.Loggers;
+
 public class DatabaseConnector {
-    private static final Logger logger = LogManager.getLogger(DatabaseConnector.class);
+//    private static final Logger logger = LogManager.getLogger(DatabaseConnector.class);
     private static Connection connection;
     private static final String PROJECT_DIR = System.getProperty("user.dir");
     private static final String CONNECTION_STRING = "jdbc:sqlite:" + PROJECT_DIR + "/database/testDB.db";
@@ -17,10 +19,10 @@ public class DatabaseConnector {
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection(CONNECTION_STRING);
-            logger.info("Connected to database successfully");
+            Loggers.info("Connected to database successfully");
             System.out.println("Connected to database successfully");
         } catch (ClassNotFoundException | SQLException e) {
-            logger.error("Error connecting to database: {}", e.getMessage());
+            Loggers.error("Error connecting to database: {}" + e.getMessage());
         }
     }
 
@@ -28,9 +30,9 @@ public class DatabaseConnector {
         if (connection != null) {
             try {
                 connection.close();
-                logger.info("Disconnected from database successfully");
+                Loggers.info("Disconnected from database successfully");
             } catch (SQLException e) {
-                logger.error("Error disconnecting from database: {}", e.getMessage());
+                Loggers.error("Error disconnecting from database: {}" + e.getMessage());
             }
         }
     }

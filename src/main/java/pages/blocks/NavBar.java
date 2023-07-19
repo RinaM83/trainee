@@ -17,4 +17,9 @@ public class NavBar {
     public Label getBasketCounter() {
         return basketCounter;
     }
+
+    public String getBasketCounterValue(){
+        return basketCounter.getElementText();
+    }
 }
+

@@ -1,5 +1,6 @@
 package common;
 
+import api.HTMLTokenExtractor;
 import config.ConfigReader;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
@@ -10,11 +11,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utils.ApiUtils;
 
+import utils.Loggers;
+
 public class Auth_api {
 
-    private final String BASE_URL = ConfigReader.getPropertyValue("url");
-    private final String LOGIN_PATH = "/login";
-    private static final Logger logger = LogManager.getLogger(Auth_api.class);
+    private final String BASE_URL = ConfigReader.getPropertyValue("baseUrl");
+    private final String LOGIN_PATH = ConfigReader.getPropertyValue("login_path");
+//    private static final Logger logger = LogManager.getLogger(Auth_api.class);
 
     private String csrfToken;
     private String sessionValue;
@@ -49,7 +52,7 @@ public class Auth_api {
             // Извлекаем CSRF токен из HTML-кода страницы авторизации
             String htmlBody = loginResponse.getBody().asString();
             csrfToken = tokenExtractor.extractCsrfTokenFromHTML(htmlBody);
-            System.out.println("----HTML Token on the login page " + csrfToken);
+//            System.out.println("----HTML Token on the login page " + csrfToken);
 
             if (!csrfToken.isEmpty()) {
                 // Создаем параметры формы для POST-запроса
@@ -95,21 +98,19 @@ public class Auth_api {
                         // Все гуд, нужен токен для использования в остальных POST запросах на product page
                         String responseBody = redirectResponse.getBody().asString();
                         xCsrfToken = tokenExtractor.extractCsrfTokenFromHTML(responseBody);
-                        System.out.println("----Токен из html после перенаправления на Product page: " + xCsrfToken);
-                        logger.info("Authorization was successful");
-//                        logger.debug("Response body after redirect -> {}", redirectResponse.getBody().asString());
+//                        System.out.println("----Токен из html после перенаправления на Product page: " + xCsrfToken);
+                        Loggers.info("Authorization was successful");
                     } else {
-                        logger.warn("Error: Something goes wrong after redirect. Redirect status code -> {}", redirectStatusCode); // Что-то пошло не так при аутентификации
+                        Loggers.warn("Error: Something goes wrong after redirect. Redirect status code -> " + redirectStatusCode); // Что-то пошло не так при аутентификации
                     }
                 } else {
-                    logger.error("Authorization failed. Server response code -> {}", statusCode);
+                    Loggers.error("Authorization failed. Server response code -> {}" + statusCode);
                 }
             } else {
-                logger.error("CSRF-token was not found on authorization page");
-                return;
+                Loggers.error("CSRF-token was not found on authorization page");
             }
         } catch (Exception e) {
-            logger.error("An error occurred while trying to authenticate. Error message -> {}", e.getMessage());
+            Loggers.error("An error occurred while trying to authenticate. Error message -> " + e.getMessage());
         }
     }
 

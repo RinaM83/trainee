@@ -1,9 +1,11 @@
 package hooks;
 
+import api.ClearBasket_api;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import common.Auth_api;
+import utils.ApiUtils;
 import utils.DatabaseUtils.DatabaseConnector;
 import utils.DatabaseUtils.DatabaseManager;
 import common.StepResult;
@@ -34,6 +36,8 @@ import java.util.Objects;
 
 public class Hooks_new {
     private Auth_api authApi;
+    private ApiUtils apiUtils;
+    private ClearBasket_api clearBasket_api;
     private Map<String, String> cookies;
     private final String userLastname = ConfigReader.getPropertyValue("userLastname");
     private  final Logger logger = LogManager.getLogger(Hooks_new.class);
@@ -65,7 +69,7 @@ public class Hooks_new {
             // Читаем настройки браузера и базовый URL из файлов настроек
             Configuration.browser = ConfigReader.getPropertyValue("browserForWeb");
 //            Configuration.browserSize = ConfigReader.getPropertyValue("browserSizeForWeb");
-            Configuration.baseUrl = ConfigReader.getPropertyValue("url");
+            Configuration.baseUrl = ConfigReader.getPropertyValue("baseUrl");
 
             platform = "web";
 
@@ -76,7 +80,7 @@ public class Hooks_new {
 //            logger.info("===============================================");
 //
 //            // Читаем настройки базового URL из файла настроек
-//            Configuration.baseUrl = ConfigReader.getPropertyValue("url");
+//            Configuration.baseUrl = ConfigReader.getPropertyValue("baseUrl");
 //            Configuration.browserSize = ConfigReader.getPropertyValue("browserSizeForMobile");
 //
 //            // Настраиваем Appium
@@ -99,7 +103,7 @@ public class Hooks_new {
 
         } else {
             // Если тест не помечен как @web или @mobile, генерируем ошибку
-            logger.error(String.format("Scenario '%s' is not tagged as '@web' or '@mobile'", scenario.getName()));
+            Loggers.error(String.format("Scenario '%s' is not tagged as '@web' or '@mobile'", scenario.getName()));
             throw new IllegalArgumentException(String.format("Scenario '%s' is not tagged as '@web' or '@mobile'", scenario.getName()));
         }
 
@@ -112,6 +116,10 @@ public class Hooks_new {
         csrfToken = authApi.getCsrfToken();
         sessionValue = authApi.getSessionValue();
         csrfTokenFromHTML = authApi.getxCsrfToken();
+
+        //Очистка корзины для тестового юзера перед прогоном тестов
+        clearBasket_api = new ClearBasket_api();
+        clearBasket_api.clearBasket(csrfTokenFromHTML,sessionValue,csrfToken);
 
         if (platform.equals("web")) {
 
@@ -186,7 +194,7 @@ public class Hooks_new {
             if (Objects.equals(platform, "web")) {
                 Loggers.info("===============================================");
                 Loggers.info(String.format("Finish web scenario '%s', status: %s", scenario.getName(), scenario.getStatus()));
-                logger.info("===============================================");
+                Loggers.info("===============================================");
             }
             // Логируем скриншот в Allure при падении теста
             if (scenario.isFailed()) {

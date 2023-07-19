@@ -1,56 +1,26 @@
 package stepdefs;
 
-import config.ConfigReader;
-import hooks.Hooks_new;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
-import io.restassured.response.Response;
+
 import org.assertj.core.api.SoftAssertions;
-import org.hamcrest.Matchers;
+import org.junit.Assert;
 import services.BasketDropdownService;
-import utils.ApiUtils;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static hooks.Hooks_new.csrfTokenFromHTML;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import services.ProductPageService;
 
 public class BasketDropdownStepdefs {
-    private final BasketDropdownService basketDropdownService = new BasketDropdownService();
-    @Given("product basket is empty")
-    public void product_basket_is_empty() {
-        String BASE_URL = ConfigReader.getPropertyValue("url");
-        String CLEAR_BASKET_PATH = "/basket/clear";
-        String GET_BASKET_PATH = "/basket/get";
+    private final BasketDropdownService basketDropdownService;
+    private final ProductPageService productPageService;
+    private final ProductPageStepdefs productPageStepdefs;
 
-        ApiUtils apiUtils = new ApiUtils(BASE_URL);
-
-//        Map<String, Object> formParams = new HashMap<>();
-//        formParams.put("_csrf", csrfTokenFromHTML);
-
-        Map<String, String> headers = new HashMap<>();
-        headers.put("X-Csrf-Token", csrfTokenFromHTML);
-        headers.put("X-Requested-With", "XMLHttpRequest");
-
-        Map<String, String> cookies = new HashMap<>();
-        cookies.put("Cookie", "PHPSESSID=" + Hooks_new.sessionValue + "; _csrf=" + Hooks_new.csrfToken);
-
-        Response clearBasket = apiUtils.post(CLEAR_BASKET_PATH, new HashMap<>(), headers, cookies);
-
-        Response getBasket = apiUtils.post(GET_BASKET_PATH, new HashMap<>(), headers, cookies);
-
-        assertThat(clearBasket.getStatusCode(), equalTo(200));
-        assertThat(clearBasket.getBody().asString(), Matchers.equalTo("{\"response\":true}"));
-        assertThat(getBasket.getStatusCode(),equalTo(200));
-        assertThat(getBasket.getBody().asString(), Matchers.equalTo("{\"response\":true,\"basket\":[],\"basketCount\":0,\"basketPrice\":0}"));
-
-        System.out.println("Товары в корзине " + getBasket.getBody().asString());
+    public BasketDropdownStepdefs(BasketDropdownService basketDropdownService, ProductPageService productPageService, ProductPageStepdefs productPageStepdefs) {
+        this.basketDropdownService = basketDropdownService;
+        this.productPageService = productPageService;
+        this.productPageStepdefs = productPageStepdefs;
     }
 
-    @And("basket icon is visible on the navigation bar")
+    @Given("basket icon is visible on the navigation bar")
     public void basket_icon_is_visible_on_the_navigation_bar() {
         SoftAssertions softAssertions = new SoftAssertions();
         basketDropdownService.isBasketIconVisible(softAssertions);
@@ -58,9 +28,10 @@ public class BasketDropdownStepdefs {
     }
 
     @When("user clicks on the basket icon")
-    public void user_clicks_on_the_basket_icon() throws InterruptedException {
+    public void user_clicks_on_the_basket_icon() {
+        basketDropdownService.scrollToBasketIcon();
+        basketDropdownService.scrollToBasketCounter();
         basketDropdownService.openBasketDropdown();
-        Thread.sleep(5000);
     }
 
     @And("a basket dropdown appears")
@@ -68,5 +39,26 @@ public class BasketDropdownStepdefs {
         SoftAssertions softAssertions = new SoftAssertions();
         basketDropdownService.isBasketDropdownAppears(softAssertions);
         softAssertions.assertAll();
+    }
+
+    @And("user clicks on \"Go to the basket\" button")
+    public void userClicksOnGoToTheBasketButton() {
+        basketDropdownService.goToTheBasket();
+    }
+
+    @And("on the nav bar, the Product count={word} is displayed next to the basket icon")
+    public void onTheNavBarTheNumberIsDisplayedNextToTheBasketIcon(String product_count) {
+        SoftAssertions softAssertions = new SoftAssertions();
+        basketDropdownService.isBasketCounterVisible(softAssertions);
+        softAssertions.assertAll();
+        String actualCount =  basketDropdownService.getBasketCountValue();
+        int product_num = productPageStepdefs.getProductNum();
+        String totalActualCount = String.valueOf(product_num * Integer.parseInt(product_count));
+        System.out.println("Количество отображающееся в навбаре: " + actualCount);
+        System.out.println("Реальное количество товаров в корзине: " + totalActualCount);
+        System.out.println("product_count из сценария: " + product_count);
+        System.out.println("количество товаров из ProductPageStepdefs: " + product_num);
+
+        Assert.assertEquals(actualCount, totalActualCount);
     }
 }

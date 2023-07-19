@@ -1,3 +1,4 @@
+api\ClearBasket_api.class
 pages\BasketPage.class
 services\BasketDropdownService.class
 pages\blocks\NavBar.class
@@ -8,6 +9,7 @@ elements\Checkbox.class
 services\ProductPageService.class
 elements\Label.class
 services\BasketPageService.class
+api\HTMLTokenExtractor.class
 pages\ProductsPage.class
 pages\blocks\BasketDropdown.class
 pages\blocks\ProductCard.class

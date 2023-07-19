@@ -5,12 +5,14 @@ import io.cucumber.java.Scenario;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import utils.Loggers;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseManager {
-    private static final Logger logger = LogManager.getLogger(DatabaseManager.class);
+//    private static final Logger logger = LogManager.getLogger(DatabaseManager.class);
     private Connection connection;
     private StepResult stepResult;
 
@@ -33,9 +35,9 @@ public class DatabaseManager {
             statement.setString(6, stepResult.getErrorMessage());
 
             statement.executeUpdate();
-            logger.debug("Saved step result for scenario {}, platform {}, stepName {}: {} = {}", stepResult.getScenarioName(), stepResult.getPlatform(), stepResult.getStepName(), stepResult.getStatus(), stepResult.getErrorMessage());
+            Loggers.debug("Saved step result for scenario {}, platform {}, stepName {}: {} = {}" + stepResult.getScenarioName() + stepResult.getPlatform() + stepResult.getStepName() + stepResult.getStatus() + stepResult.getErrorMessage());
         } catch (SQLException e) {
-            logger.error("Error saving step result", e);
+            Loggers.error("Error saving step result" + e);
         }
     }
 
@@ -58,9 +60,9 @@ public class DatabaseManager {
                     results.add(stepResult);
                 }
             }
-            logger.debug("Retrieved {} step results for user {}", results.size(), userLastname);
+            Loggers.debug("Retrieved {} step results for user {}"+  results.size() + userLastname);
         } catch (SQLException e) {
-            logger.error("Error getting step results for user {}: {}", userLastname, e.getMessage());
+            Loggers.error("Error getting step results for user {}: {}" + userLastname + e.getMessage());
         }
 
         return results;
@@ -71,9 +73,9 @@ public class DatabaseManager {
                 "DELETE FROM step_results WHERE user_lastname = ?")) {
             statement.setString(1, userLastname);
             int deletedRows = statement.executeUpdate();
-            logger.debug("Deleted {} step results for user {}", deletedRows, userLastname);
+            Loggers.debug("Deleted {} step results for user {}" + deletedRows + userLastname);
         } catch (SQLException e) {
-            logger.error("Error deleting step results for user {}: {}", userLastname, e.getMessage());
+            Loggers.error("Error deleting step results for user {}: {}" + userLastname + e.getMessage());
         }
     }
 
@@ -83,9 +85,9 @@ public class DatabaseManager {
             statement.setString(1, scenario.getName());
             statement.setString(2, platform);
             int deletedRows = statement.executeUpdate();
-            logger.debug("Deleted {} step results for scenario {} and platform {}", deletedRows, scenario.getName(), platform);
+            Loggers.debug("Deleted {} step results for scenario {} and platform {}" + deletedRows + scenario.getName() + platform);
         } catch (SQLException e) {
-            logger.error("Error deleting step results for scenario {} and platform {}: {}", scenario.getName(), platform, e.getMessage());
+            Loggers.error("Error deleting step results for scenario {} and platform {}: {}" + scenario.getName() + platform + e.getMessage());
             throw e;
         }
     }
