@@ -15,6 +15,10 @@ public class BasketDropdownService {
     }
     public void scrollToBasketCounter() {
         navBar.getBasketCounter().scrollIntoView();
+        navBar.getBasketCounter().isDisplayed();
+    }
+    public void logoIsDisplayed(){
+        navBar.getLogoIcon().isDisplayed();
     }
 
     public void openBasketDropdown(){

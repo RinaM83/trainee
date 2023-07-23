@@ -1,8 +1,8 @@
 # Default ignored files
 /shelf/
 /workspace.xml
-target/
-.idea/
-allure-results/
-.build/
-.logs/
+/target/
+/.idea/
+/allure-results/
+/.build/
+/.logs/

@@ -9,6 +9,7 @@ import static com.codeborne.selenide.Selenide.$;
 public class NavBar {
     private final Button basketIconButton = new Button($(By.xpath("//div[@id='navbarNav']//i[starts-with(@class, 'basket_icon')]")));
     private final Label basketCounter = new Label($(By.xpath("//span[contains(@class, 'basket-count-items')]")));
+    private final Label logoIcon = new Label(($(By.xpath("//a[@class='navbar-brand']"))));
 
     public Button getBasketIconButton() {
         return basketIconButton;
@@ -16,6 +17,10 @@ public class NavBar {
 
     public Label getBasketCounter() {
         return basketCounter;
+    }
+
+    public Label getLogoIcon() {
+        return logoIcon;
     }
 
     public String getBasketCounterValue(){

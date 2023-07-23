@@ -1,5 +1,6 @@
 package stepdefs;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
 import pages.blocks.NavBar;
 import services.ProductPageService;
@@ -12,10 +13,23 @@ public class ProductPageStepdefs {
         this.productPageService = productPageService;
         this.navBar = navBar;
     }
+
     private int productNum;
+
     public int getProductNum() {
         return productNum;
     }
+
+    @And("if Test case number = {int}, initial_num={int} product with discount added to the basket")
+    public void ifTestCaseNumber4ProductWithDiscountAddedToTheBasket(int num, int initial_num) {
+        if (num == 4) {
+            productNum = initial_num;
+            productPageService.buyProductsWithDiscount(initial_num, "1");
+        } else {
+            System.out.println("Test case number is not 4. Skipping the step.");
+        }
+    }
+
     @When("user adds product\\(-s) with discount={word} with Number of products={int} and quantity of each of the products Product count={word} to the basket")
     public void userAddsOneProductToTheBasketWithoutADiscount(String hasDiscount, int product_num, String product_count) {
         productNum = product_num;
@@ -29,7 +43,7 @@ public class ProductPageStepdefs {
             } else {
                 System.out.println("Please check has_discount value in the scenario");
             }
-        } catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             System.out.println("Exception: " + e.getMessage());
             throw new AssertionError("Шаг не пройден", e);
         }

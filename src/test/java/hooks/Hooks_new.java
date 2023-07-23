@@ -201,7 +201,7 @@ public class Hooks_new {
                 Loggers.info(String.format("Failed on step %d: %s", stepNumber, stepName));
                 Selenide.screenshot("Failure web screenshot");
                 Allure.addAttachment("Screenshot", new ByteArrayInputStream(Selenide.screenshot(OutputType.BYTES)));
-                Allure.addAttachment("Failed step", String.valueOf(stepNumber), stepName);
+//                Allure.addAttachment("Failed step", String.valueOf(stepNumber), stepName);
             }
             closeWebDriver();
 

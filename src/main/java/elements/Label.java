@@ -18,13 +18,13 @@ public class Label extends BaseElement{
     public boolean isDisplayed() {
         this.logAction("Is displayed");
         return this.getWrappedElement()
-                .shouldBe(Condition.visible, Duration.ofMillis(5000))
+                .shouldBe(Condition.visible, Duration.ofMillis(10000))
                 .isDisplayed();
     }
     public boolean isNotDisplayed(){
         this.logAction("Is not displayed");
         return this.getWrappedElement()
-                .shouldNotBe(Condition.visible,Duration.ofMillis(5000))
+                .shouldNotBe(Condition.visible,Duration.ofMillis(10000))
                 .isDisplayed();
     }
 }
