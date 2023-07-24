@@ -48,17 +48,21 @@ public class BasketDropdownStepdefs {
 
     @And("on the nav bar, the Product count={word} is displayed next to the basket icon")
     public void onTheNavBarTheNumberIsDisplayedNextToTheBasketIcon(String product_count) throws InterruptedException {
-        Thread.sleep(5000);
+        Thread.sleep(2000);
         SoftAssertions softAssertions = new SoftAssertions();
         basketDropdownService.isBasketCounterVisible(softAssertions);
         softAssertions.assertAll();
         String actualCount =  basketDropdownService.getBasketCountValue();
         int product_num = productPageStepdefs.getProductNum();
-        String totalActualCount = String.valueOf(product_num * Integer.parseInt(product_count));
+        int initial_num = productPageStepdefs.getInitialNum();
+
+        String totalActualCount = String.valueOf((initial_num + product_num) * Integer.parseInt(product_count));
+
         System.out.println("Количество отображающееся в навбаре: " + actualCount);
         System.out.println("Реальное количество товаров в корзине: " + totalActualCount);
         System.out.println("product_count из сценария: " + product_count);
-        System.out.println("количество товаров из ProductPageStepdefs: " + product_num);
+        System.out.println("Начальное количество товаров из ProductPageStepdefs: " + initial_num);
+        System.out.println("Добавленное количество товаров из ProductPageStepdefs: " + product_num);
 
         Assert.assertEquals(actualCount, totalActualCount);
     }

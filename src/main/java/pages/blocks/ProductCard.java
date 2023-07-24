@@ -9,11 +9,13 @@ public class ProductCard {
     private final Label productTitle;
     private final Button buyBtn;
     private final Input productCounter;
+    private final Label stockBalance;
 
     public ProductCard(SelenideElement root){
         this.productTitle = new Label(root.$("div.note-list.row div[class^=product_name]"));
         this.buyBtn = new Button(root.$("div.note-list.row button.actionBuyProduct"));
         this.productCounter = new Input(root.$("div.note-list.row input[name='product-enter-count']"));
+        this.stockBalance = new Label(root.$("div.note-list.row span[class^=product_count]"));
     }
 
     public Label getProductTitle() {
@@ -24,16 +26,24 @@ public class ProductCard {
         return productCounter;
     }
 
+    public Label getStockBalance() {
+        return stockBalance;
+    }
+
     public void setProductCounterValue(String value) {
         productCounter.clearAndType(value);
     }
 
-    public void getProductTitleValue(){
-        productTitle.getElementText();
+    public String getProductTitleValue(){
+        return productTitle.getElementText();
     }
 
     public void getProductCounterValue(){
         productCounter.getElementText();
+    }
+
+    public int getProductStockBalanceValue(){
+        return Integer.parseInt(stockBalance.getElementText());
     }
 
     public boolean getProductTitleValue(String expectedValue) {
