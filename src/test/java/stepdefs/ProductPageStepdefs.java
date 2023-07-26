@@ -31,11 +31,11 @@ public class ProductPageStepdefs {
             initialNum = initial_num;
             try {
                 if (initial_hasDiscount.equals("no")) {
-                    productPageService.buyProductsWithoutDiscount(0, initial_num, initial_count);
+                    productPageService.buyProductsWithoutDiscount(initial_num, initial_count);
                 } else if (initial_hasDiscount.equals("yes")) {
-                    productPageService.buyProductsWithDiscount(0, initial_num, initial_count);
+                    productPageService.buyProductsWithDiscount(initial_num, initial_count);
                 } else if (initial_hasDiscount.equals("all")) {
-                    productPageService.buyAllProducts(0, initial_num, initial_count);
+                    productPageService.buyAllProducts(initial_num, initial_count);
                 } else {
                     System.out.println("Please check initial_has_discount value in the scenario");
                 }
@@ -49,16 +49,17 @@ public class ProductPageStepdefs {
     }
 
     @When("initial_num={int} product added to the basket and user adds product\\(-s) with discount={word} with Number of products={int} and quantity of each of the products Product count={word} to the basket")
-    public void userAddsOneProductToTheBasketWithoutDiscount(int initial_num, String hasDiscount, int product_num, String product_count) {
+    public void userAddsOneProductToTheBasketWithoutDiscount(int initial_num, String hasDiscount, int product_num, String product_count) throws InterruptedException {
         initialNum = initial_num;
         productNum = product_num;
+
         try {
             if (hasDiscount.equals("no")) {
-                productPageService.buyProductsWithoutDiscount(initial_num, product_num, product_count);
+                productPageService.buyProductsWithoutDiscount(product_num, product_count);
             } else if (hasDiscount.equals("yes")) {
-                productPageService.buyProductsWithDiscount(initial_num, product_num, product_count);
+                productPageService.buyProductsWithDiscount(product_num, product_count);
             } else if (hasDiscount.equals("all")) {
-                productPageService.buyAllProducts(initial_num, product_num, product_count);
+                productPageService.buyAllProducts(product_num, product_count);
             } else {
                 System.out.println("Please check has_discount value in the scenario");
             }
@@ -72,5 +73,4 @@ public class ProductPageStepdefs {
         System.out.println("product_num на ProductPageStepdefs: " + product_num);
         System.out.println("String product_count на ProductPageStepdefs: " + product_count);
     }
-
 }

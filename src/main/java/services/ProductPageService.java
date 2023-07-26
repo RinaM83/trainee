@@ -1,5 +1,6 @@
 package services;
 
+import elements.Button;
 import pages.ProductsPage;
 import pages.blocks.ProductCard;
 
@@ -13,81 +14,68 @@ public class ProductPageService {
         this.productsPage = productsPage;
     }
 
-    public void buyAllProducts(int startIndex, int numProducts, String counterValue){
-        buyProducts(productsPage.getAllProducts(), startIndex, numProducts, counterValue);
+    private int count;
 
-        int remainingNumProducts = numProducts - (productsPage.getAllProducts().size() - startIndex);
-        System.out.println("Осталось взять на стр 2: " + remainingNumProducts);
+    public void buyAllProducts(int numProducts, String counterValue){
+        buyProducts(productsPage.getAllProducts(), numProducts, counterValue);
+    }
 
-        if (remainingNumProducts > 0) {
-            paginateToThePage(2);
-            int availableOnNextPage = productsPage.getAllProducts().size();
-            if (remainingNumProducts > availableOnNextPage){
-                throw new IndexOutOfBoundsException("Отсутствует необходимое количество товаров!");
+    public void buyProductsWithDiscount(int numProducts, String counterValue){
+        productsPage.getProductIdForProductsWithDiscount();
+        buyProducts(productsPage.getProductsWithDiscount(), numProducts, counterValue);
+    }
+
+    public void buyProductsWithoutDiscount(int numProducts, String counterValue) {
+        buyProducts(productsPage.getProductsWithoutDiscount(), numProducts, counterValue);
+    }
+
+    private void buyProducts(Collection<ProductCard> products, int numProducts, String counterValue) {
+        int totalPages = productsPage.getPaginationBtn().size();
+        System.out.println("Всего страниц: " + totalPages);
+        int currentPage = 1;
+        count = 0;
+
+        while (numProducts > 0 && currentPage <= totalPages) {
+            paginateToThePage(currentPage);
+            int remainingNumProducts = numProducts;
+            if (currentPage == 1) {
+                remainingNumProducts -= count;
             }
-
-            buyProducts(productsPage.getAllProducts(), 0, remainingNumProducts, counterValue);
-        }
-    }
-    public void buyProductsWithDiscount(int startIndex, int numProducts, String counterValue){
-        buyProducts(productsPage.getProductsWithDiscount(),startIndex, numProducts, counterValue);
-
-        int remainingNumProducts = numProducts - (productsPage.getProductsWithDiscount().size() - startIndex);
-        System.out.println("Осталось взять на стр 2: " + remainingNumProducts);
-
-        if (remainingNumProducts > 0) {
-            paginateToThePage(2);
-            int availableOnNextPage = productsPage.getProductsWithDiscount().size();
-            if (remainingNumProducts > availableOnNextPage){
-                throw new IndexOutOfBoundsException("Отсутствует необходимое количество товаров со скидкой!");
-            }
-
-            buyProducts(productsPage.getProductsWithDiscount(),0, remainingNumProducts, counterValue);
+            buyProductsOnThePage(products, remainingNumProducts, counterValue, currentPage);
+            numProducts -= count;
+            currentPage++;
         }
     }
 
-    public void buyProductsWithoutDiscount(int startIndex, int numProducts, String counterValue) {
-        buyProducts(productsPage.getProductsWithoutDiscount(), startIndex, numProducts, counterValue);
-
-        int remainingNumProducts = numProducts - (productsPage.getProductsWithoutDiscount().size() - startIndex);
-        System.out.println("Осталось взять на стр 2: " + remainingNumProducts);
-
-        if (remainingNumProducts > 0) {
-            paginateToThePage(2);
-        int availableOnNextPage = productsPage.getProductsWithoutDiscount().size();
-        if (remainingNumProducts > availableOnNextPage){
-            throw new IndexOutOfBoundsException("Отсутствует необходимое количество товаров без скидки!");
-        }
-            buyProducts(productsPage.getProductsWithoutDiscount(),0, remainingNumProducts, counterValue);
-        }
-    }
-
-    private void buyProducts(Collection<ProductCard> products, int startIndex, int numProducts, String counterValue){
+    private void buyProductsOnThePage(Collection<ProductCard> products, int numProducts, String counterValue, int page) {
         int size = products.size();
-        System.out.println("Нужно взять всего товаров: " + numProducts);
+        System.out.println("Нужно взять всего товаров на " + page + "-х страницах : " + numProducts);
+        System.out.println("Всего в коллекции на стр " + page + ": " + size);
 
-        if (startIndex < 0 || startIndex >= size) {
-            throw new IndexOutOfBoundsException("Неверный startIndex. Индекс должен быть в диапазоне [0, " + (size - 1) + "]");
-        }
-
-        System.out.println("Продуктов на стр 1: " + (size - startIndex));
-
-        for (int i = startIndex; i < startIndex + numProducts && i < size; i++) {
+        count = 0;
+        for (int i = 0; i < size && count < numProducts; i++) {
             ProductCard productCard = products.getModel(i);
 
-            if(productCard.getProductStockBalanceValue() > 0){
+            if (productCard.getProductStockBalanceValue() > 0) {
                 productCard.setProductCounterValue(counterValue);
                 productCard.buy();
+                count++;
+                System.out.println("Продукт " + productCard.getProductTitleValue() + " есть на складе в количестве 30 и добавлен в корзину");
             } else {
-                System.out.println("Продукт " + productCard.getProductTitleValue() + " отсутствует на складе");
+                System.out.println("Продукт " + productCard.getProductTitleValue() + " отсутствует на складе в количестве 30");
             }
-
         }
+
+        System.out.println("В корзину успешно добавлено на странице " + page + ": " + count + " товаров.");
     }
-    private void paginateToThePage(int pageNum){
+
+
+    public void paginateToThePage(int pageNum){
         final int size = productsPage.getPaginationBtn().size();
         for (int i = 0; i < pageNum && i < size; i++){
-            productsPage.getPaginationBtn().getModel(i).click();
+            Button paginationButton = productsPage.getPaginationBtn().getModel(i);
+            paginationButton.click();
+            paginationButton.isChangeColor("background-color", "rgba(0, 123, 255, 1)");
         }
     }
 }

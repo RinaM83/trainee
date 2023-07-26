@@ -17,7 +17,6 @@ public class Auth_api {
 
     private final String BASE_URL = ConfigReader.getPropertyValue("baseUrl");
     private final String LOGIN_PATH = ConfigReader.getPropertyValue("login_path");
-//    private static final Logger logger = LogManager.getLogger(Auth_api.class);
 
     private String csrfToken;
     private String sessionValue;
@@ -52,7 +51,6 @@ public class Auth_api {
             // Извлекаем CSRF токен из HTML-кода страницы авторизации
             String htmlBody = loginResponse.getBody().asString();
             csrfToken = tokenExtractor.extractCsrfTokenFromHTML(htmlBody);
-//            System.out.println("----HTML Token on the login page " + csrfToken);
 
             if (!csrfToken.isEmpty()) {
                 // Создаем параметры формы для POST-запроса

@@ -1,0 +1,19 @@
+2023-07-26 14:58:43,667 INFO [main] Connected to database successfully 
+2023-07-26 14:58:43,669 INFO [main] =============================================== 
+2023-07-26 14:58:43,669 INFO [main] Start web scenario 'Test case number = 4: adding product(-s) with discount = all to the basket where already products in the cart initial_num=1' 
+2023-07-26 14:58:43,669 INFO [main] =============================================== 
+2023-07-26 14:58:45,703 INFO [main] Authorization was successful 
+2023-07-26 14:59:07,449 INFO [main] =============================================== 
+2023-07-26 14:59:07,450 INFO [main] Finish web scenario 'Test case number = 4: adding product(-s) with discount = all to the basket where already products in the cart initial_num=1', status: FAILED 
+2023-07-26 14:59:07,450 INFO [main] =============================================== 
+2023-07-26 14:59:07,450 INFO [main] Failed on step 0: null 
+2023-07-26 14:59:08,950 INFO [main] Disconnected from database successfully 
+2023-07-26 14:59:08,955 INFO [main] =============================================== 
+2023-07-26 14:59:08,955 INFO [main] Start web scenario 'Test case number = 5: adding product(-s) with discount = yes to the basket where already products in the cart initial_num=0' 
+2023-07-26 14:59:08,955 INFO [main] =============================================== 
+2023-07-26 14:59:09,634 INFO [main] Authorization was successful 
+2023-07-26 14:59:22,421 INFO [main] =============================================== 
+2023-07-26 14:59:22,421 INFO [main] Finish web scenario 'Test case number = 5: adding product(-s) with discount = yes to the basket where already products in the cart initial_num=0', status: FAILED 
+2023-07-26 14:59:22,421 INFO [main] =============================================== 
+2023-07-26 14:59:22,421 INFO [main] Failed on step 0: null 
+2023-07-26 14:59:23,652 INFO [main] Disconnected from database successfully 

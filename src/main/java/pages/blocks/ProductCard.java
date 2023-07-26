@@ -10,12 +10,14 @@ public class ProductCard {
     private final Button buyBtn;
     private final Input productCounter;
     private final Label stockBalance;
+    private final SelenideElement root;
 
     public ProductCard(SelenideElement root){
         this.productTitle = new Label(root.$("div.note-list.row div[class^=product_name]"));
         this.buyBtn = new Button(root.$("div.note-list.row button.actionBuyProduct"));
         this.productCounter = new Input(root.$("div.note-list.row input[name='product-enter-count']"));
         this.stockBalance = new Label(root.$("div.note-list.row span[class^=product_count]"));
+        this.root = root;
     }
 
     public Label getProductTitle() {
@@ -60,4 +62,7 @@ public class ProductCard {
         buyBtn.click();
     }
 
+    public String getProductId(){
+        return root.getAttribute("data-product");
+    }
 }

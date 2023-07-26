@@ -1,10 +1,12 @@
 package hooks;
 
+import api.AddToTheBasket_api;
 import api.ClearBasket_api;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import common.Auth_api;
+import io.cucumber.datatable.DataTable;
 import utils.ApiUtils;
 import utils.DatabaseUtils.DatabaseConnector;
 import utils.DatabaseUtils.DatabaseManager;
@@ -38,9 +40,10 @@ public class Hooks_new {
     private Auth_api authApi;
     private ApiUtils apiUtils;
     private ClearBasket_api clearBasket_api;
+    private AddToTheBasket_api addToTheBasket_api;
     private Map<String, String> cookies;
     private final String userLastname = ConfigReader.getPropertyValue("userLastname");
-    private  final Logger logger = LogManager.getLogger(Hooks_new.class);
+    private final Logger logger = LogManager.getLogger(Hooks_new.class);
     private final ThreadLocal<AppiumDriver<MobileElement>> mobileDriver = new ThreadLocal<>();
     private final DatabaseManager databaseManager = new DatabaseManager();
     private String platform;
@@ -53,6 +56,7 @@ public class Hooks_new {
     public static String csrfToken;
     public static String sessionValue;
     public static String csrfTokenFromHTML;
+    private DataTable dataTable;
 
     @Before()
     public void beforeScenario(Scenario scenario) {
@@ -68,38 +72,10 @@ public class Hooks_new {
 
             // Читаем настройки браузера и базовый URL из файлов настроек
             Configuration.browser = ConfigReader.getPropertyValue("browserForWeb");
-//            Configuration.browserSize = ConfigReader.getPropertyValue("browserSizeForWeb");
+            Configuration.browserSize = ConfigReader.getPropertyValue("browserSizeForWeb");
             Configuration.baseUrl = ConfigReader.getPropertyValue("baseUrl");
 
             platform = "web";
-
-//        } else if (tags.contains("@mobile")) {
-//            // Для запуска на мобилке
-//            logger.info("===============================================");
-//            logger.info(String.format("Start mobile scenario '%s'", scenario.getName()));
-//            logger.info("===============================================");
-//
-//            // Читаем настройки базового URL из файла настроек
-//            Configuration.baseUrl = ConfigReader.getPropertyValue("baseUrl");
-//            Configuration.browserSize = ConfigReader.getPropertyValue("browserSizeForMobile");
-//
-//            // Настраиваем Appium
-//            DesiredCapabilities capabilities = new DesiredCapabilities();
-//            capabilities.setCapability("platformName", "Android");
-//            capabilities.setCapability("platformVersion", "13");
-//            capabilities.setCapability("deviceName", "vivo V21");
-//            capabilities.setCapability("browserName", "Chrome"); // Указываем имя браузера, который будет использоваться для тестирования.
-//            capabilities.setCapability("noReset", true); // Указываем, что не нужно очищать кэш браузера перед каждым запуском.
-//
-//            try {
-//                AppiumDriver<MobileElement> driver = new AndroidDriver<>(new URL("http://localhost:4723/wd/hub"), capabilities);
-//                mobileDriver.set(driver);
-//
-//                platform = "mobile";
-//
-//            } catch (MalformedURLException e) {
-//                logger.error(String.format("Failed to create Appium driver with error: %s", e.getMessage()));
-//            }
 
         } else {
             // Если тест не помечен как @web или @mobile, генерируем ошибку
@@ -112,84 +88,39 @@ public class Hooks_new {
         authApi.auth(ConfigReader.getPropertyValue("username"), ConfigReader.getPropertyValue("password"));
 
         // Получение CSRF токена и сессии для авторизации через cookie
-
         csrfToken = authApi.getCsrfToken();
         sessionValue = authApi.getSessionValue();
         csrfTokenFromHTML = authApi.getxCsrfToken();
 
         //Очистка корзины для тестового юзера перед прогоном тестов
         clearBasket_api = new ClearBasket_api();
-        clearBasket_api.clearBasket(csrfTokenFromHTML,sessionValue,csrfToken);
+        clearBasket_api.clearBasket(csrfTokenFromHTML, sessionValue, csrfToken);
+
+        //Добавление товара в корзину перед прогоном сценария, если initial_num > 0
+        if (scenarioName.contains("initial_num")) {
+            String numValue = scenarioName.split("initial_num=")[1];
+            int initialNum = Integer.parseInt(numValue);
+
+            if (initialNum > 0) {
+                addToTheBasket_api = new AddToTheBasket_api();
+                addToTheBasket_api.addToTheBasket(csrfTokenFromHTML, sessionValue, csrfToken);
+            }
+        }
 
         if (platform.equals("web")) {
 
+            System.out.println("ИМЯ: " + scenarioName);
             Selenide.open(Configuration.baseUrl);
             // Установка CSRF токена и сессии в cookie перед каждым запросом\
             WebDriverRunner.getWebDriver().manage().addCookie(new Cookie("_csrf", csrfToken));
             WebDriverRunner.getWebDriver().manage().addCookie(new Cookie("PHPSESSID", sessionValue));
             WebDriverRunner.getWebDriver().navigate().to(Configuration.baseUrl);
-
-//        } else if (platform.equals("mobile")) {
-//            // Открываем нужную страницу в браузере мобильного устройства
-//            String url = Configuration.baseUrl;
-//            mobileDriver.get().navigate().to(url);
-//
-//            // Установка CSRF токена и сессии в cookie перед каждым запросом
-//            Cookie csrfCookie = new Cookie("_csrf", csrfToken);
-//            Cookie sessionCookie = new Cookie("PHPSESSID", sessionValue);
-//            mobileDriver.get().manage().addCookie(csrfCookie);
-//            mobileDriver.get().manage().addCookie(sessionCookie);
-//        }
-//        // Удаление всех записей из базы данных перед началом выполнения тестового сценария
-//        try {
-//            databaseManager.deleteStepResultsBeforeScenario(scenario, platform);
-//
-//        } catch (SQLException e) {
-//            logger.error("Error connecting to database: " + e.getMessage());
-//        }
     }
-
-//    @BeforeStep
-//    public void beforeStep(Step step) {
-//        currentStep = step;
-//        int stepNumber = step.getLine();
-//        String stepName = step.getText();
-//        Loggers.info("Starting step number " + stepNumber + ": " + stepName);
-//    }
-//
-//    @AfterStep
-//    public void afterStep(Scenario scenario) {
-//        int stepNumber = currentStep.getLine();
-//        String stepName = currentStep.getText();
-//        Loggers.info("Завершение шага " + stepNumber + ": " + stepName);
-//        stepResult = new StepResult(
-//                userLastname,
-//                scenario.getName(),
-//                stepName,
-//                scenario.getStatus().toString(),
-//                platform,
-//                scenario.isFailed() ? scenario.getStatus().toString() : "Passed");
-//
-//        //         Сохраняем результат выполнения тестового шага в базу данных - ДОБАВИТЬ НОМЕР ШАГА в методы
-//        databaseManager.saveStepResult(stepResult);
     }
 
     @After()
     public void afterScenario(Scenario scenario) {
         try {
-//            if (Objects.equals(platform, "mobile")) {
-//                Loggers.info("===============================================");
-//                Loggers.info(String.format("Finish mobile scenario '%s', status: %s", scenario.getName(), scenario.getStatus()));
-//                Loggers.info("===============================================");
-//            }
-//            // Логируем скриншот в Allure при падении теста
-//            if (scenario.isFailed()) {
-//                Loggers.info(String.format("Failed on step %d: %s", stepNumber, stepName));
-//                Selenide.screenshot("Failure mobile screenshot");
-//                Allure.addAttachment("Screenshot", new ByteArrayInputStream(mobileDriver.get().getScreenshotAs(OutputType.BYTES)));
-//                Allure.addAttachment("Failed step", String.valueOf(stepNumber), stepName);
-//            }
-//            mobileDriver.get().quit();
 
             if (Objects.equals(platform, "web")) {
                 Loggers.info("===============================================");

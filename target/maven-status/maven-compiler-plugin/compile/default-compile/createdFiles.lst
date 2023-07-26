@@ -10,6 +10,7 @@ services\ProductPageService.class
 elements\Label.class
 services\BasketPageService.class
 api\HTMLTokenExtractor.class
+api\AddToTheBasket_api.class
 pages\ProductsPage.class
 pages\blocks\BasketDropdown.class
 pages\blocks\ProductCard.class
