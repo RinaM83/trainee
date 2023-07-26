@@ -109,7 +109,6 @@ public class Hooks_new {
 
         if (platform.equals("web")) {
 
-            System.out.println("ИМЯ: " + scenarioName);
             Selenide.open(Configuration.baseUrl);
             // Установка CSRF токена и сессии в cookie перед каждым запросом\
             WebDriverRunner.getWebDriver().manage().addCookie(new Cookie("_csrf", csrfToken));

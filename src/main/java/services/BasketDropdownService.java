@@ -24,6 +24,9 @@ public class BasketDropdownService {
     public void openBasketDropdown(){
         navBar.getBasketIconButton().click();
     }
+    public void openBasketDropdownByTextLabel(){
+        navBar.getBasket().click();
+    }
 
     public void isBasketIconVisible(SoftAssertions softAssertions){
         isVisible(softAssertions,navBar.getBasketIconButton(),"Basket icon");
@@ -36,11 +39,6 @@ public class BasketDropdownService {
     public void isBasketDropdownAppears(SoftAssertions softAssertions){
         isVisible(softAssertions,basketDropdown.getBasketDropdown(),"Basket Dropdown");
     }
-
-//    public void isBasketItemsVisible(SoftAssertions softAssertions){
-//        isVisible(softAssertions, basketI);
-//
-//    }
 
     public String getBasketCountValue(){
         final String basketCounterValue;

@@ -35,6 +35,10 @@ public class BasketItem {
         return basketProductTlt.getElementText();
     }
 
+    public boolean compareTitles(String title){
+        return basketProductTltValue().equals(title);
+    }
+
     public String basketProductPriceValue(){
         return basketProductPrice.getElementText();
     }

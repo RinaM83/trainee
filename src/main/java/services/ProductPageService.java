@@ -1,7 +1,10 @@
 package services;
 
 import elements.Button;
+import elements.Label;
 import pages.ProductsPage;
+import pages.blocks.BasketDropdown;
+import pages.blocks.BasketItem;
 import pages.blocks.ProductCard;
 
 import elements.Collection;
@@ -9,9 +12,13 @@ import elements.Collection;
 public class ProductPageService {
 
     private final ProductsPage productsPage;
+    private final BasketDropdown basketDropdown;
+    private final BasketDropdownService basketDropdownService;
 
-    public ProductPageService(ProductsPage productsPage) {
+    public ProductPageService(ProductsPage productsPage, BasketDropdown basketDropdown, BasketDropdownService basketDropdownService) {
         this.productsPage = productsPage;
+        this.basketDropdown = basketDropdown;
+        this.basketDropdownService = basketDropdownService;
     }
 
     private int count;
@@ -49,14 +56,14 @@ public class ProductPageService {
 
     private void buyProductsOnThePage(Collection<ProductCard> products, int numProducts, String counterValue, int page) {
         int size = products.size();
-        System.out.println("Нужно взять всего товаров на " + page + "-х страницах : " + numProducts);
+        System.out.println("Нужно взять всего товаров на " + page + " странице (-х) : " + numProducts);
         System.out.println("Всего в коллекции на стр " + page + ": " + size);
 
         count = 0;
         for (int i = 0; i < size && count < numProducts; i++) {
             ProductCard productCard = products.getModel(i);
 
-            if (productCard.getProductStockBalanceValue() > 0) {
+            if (productCard.getProductStockBalanceValue() > 0 && !isProductInBasket(productCard.getProductTitleValue())) {
                 productCard.setProductCounterValue(counterValue);
                 productCard.buy();
                 count++;
@@ -77,5 +84,18 @@ public class ProductPageService {
             paginationButton.click();
             paginationButton.isChangeColor("background-color", "rgba(0, 123, 255, 1)");
         }
+    }
+
+    public boolean isProductInBasket(String title) {
+        basketDropdownService.openBasketDropdownByTextLabel();
+        final int size = basketDropdown.getBasketItems().size();
+        for (int i = 0; i < size; i++) {
+            BasketItem basketItem = basketDropdown.getBasketItems().getModel(i);
+            basketItem.basketProductTltValue();
+            if (basketItem.compareTitles(title)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
