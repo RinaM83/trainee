@@ -4,9 +4,11 @@ import api.HTMLTokenExtractor;
 import config.ConfigReader;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utils.ApiUtils;
@@ -21,7 +23,6 @@ public class Auth_api {
     private String csrfToken;
     private String sessionValue;
     private String redirectUrl;
-
     private String xCsrfToken;
 
     public void auth(String username, String password) {
@@ -32,7 +33,7 @@ public class Auth_api {
             ApiUtils apiUtils = new ApiUtils(BASE_URL);
 
             // Отправляем GET-запрос на страницу авторизации
-            Response loginResponse =apiUtils.get(LOGIN_PATH,new HashMap<>());
+            Response loginResponse = apiUtils.get(LOGIN_PATH, new HashMap<>());
 
             // Получаем значение всех заголовков Set-Cookie из ответа сервера
             Headers loginHeaders = loginResponse.getHeaders();
@@ -41,7 +42,7 @@ public class Auth_api {
             // Разбиваем значения заголовков Set-Cookie на отдельные куки и сохраняем их в Map
             Map<String, String> cookies = new HashMap<>();
             for (String setCookieHeader : setCookieHeaders) {
-                for (String cookie : setCookieHeader.split(";")) { // удаляем пробел после точки с запятой
+                for (String cookie : setCookieHeader.split(";")) {
                     String[] parts = cookie.trim().split("="); // обрезаем пробелы в начале и конце и затем разбиваем на части
                     if (parts.length == 2) { // проверка что cookie содержит имя и значение
                         cookies.put(parts[0], parts[1]);
@@ -64,7 +65,7 @@ public class Auth_api {
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Referer", BASE_URL + LOGIN_PATH);
 
-                // Выполняем POST-запрос для аутентификации на сайте
+                // Выполняем POST-запрос авторизации на сайте
                 Response authResponse = apiUtils.post(LOGIN_PATH, formParams, headers, cookies);
 
                 int statusCode = authResponse.getStatusCode();
@@ -89,14 +90,13 @@ public class Auth_api {
                     sessionValue = authCookies.get("PHPSESSID");
                     csrfToken = authCookies.get("_csrf");
                     // Выполняем GET-запрос на URL после перенаправления, чтобы убедиться, что все ок и получить токен
-                    Response redirectResponse = apiUtils.get(locationHeader,authCookies);
+                    Response redirectResponse = apiUtils.get(locationHeader, authCookies);
                     // Проверяем, что перенаправление выполнено успешно
                     int redirectStatusCode = redirectResponse.getStatusCode();
                     if (redirectStatusCode == 200) {
                         // Все гуд, нужен токен для использования в остальных POST запросах на product page
                         String responseBody = redirectResponse.getBody().asString();
                         xCsrfToken = tokenExtractor.extractCsrfTokenFromHTML(responseBody);
-//                        System.out.println("----Токен из html после перенаправления на Product page: " + xCsrfToken);
                         Loggers.info("Authorization was successful");
                     } else {
                         Loggers.warn("Error: Something goes wrong after redirect. Redirect status code -> " + redirectStatusCode); // Что-то пошло не так при аутентификации

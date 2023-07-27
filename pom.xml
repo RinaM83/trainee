@@ -11,13 +11,13 @@
     <properties>
         <cucumber.version>7.12.1</cucumber.version>
         <selenide.version>5.24.4</selenide.version>
-        <junit.version>5.8.0</junit.version>
+        <junit.version>5.9.1</junit.version>
         <project.java.version>11</project.java.version>
-        <allure-junit5.version>2.21.0</allure-junit5.version>
+        <allure-junit5.version>2.22.2</allure-junit5.version>
         <allure.maven.version>2.12.0</allure.maven.version>
         <allure.maven.plugin.version>2.10.0</allure.maven.plugin.version>
         <allure.cucumber7.jvm>2.22.2</allure.cucumber7.jvm>
-        <maven.surefire.plugin.version>3.0.0-M4</maven.surefire.plugin.version>
+        <maven.surefire.plugin.version>3.1.2</maven.surefire.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <extentreports-version>5.0.8</extentreports-version>
@@ -56,7 +56,6 @@
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit</artifactId>
             <version>${cucumber.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
@@ -154,11 +153,6 @@
             <artifactId>java-client</artifactId>
             <version>${java-client.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.aventstack</groupId>
-            <artifactId>extentreports</artifactId>
-            <version>${extentreports-version}</version>
-        </dependency>
  <!--JDBC for sqlite-->
         <dependency>
             <groupId>org.xerial</groupId>
@@ -191,6 +185,7 @@
             </includes>
             <parallel>methods</parallel>
             <threadCount>1</threadCount>
+            <perCoreThreadCount>false</perCoreThreadCount>
             <argLine>
                 -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                 -Dcucumber.plugin="io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
@@ -214,74 +209,9 @@
              <artifactId>allure-maven</artifactId>
              <version>${allure.maven.plugin.version}</version>
              <configuration>
-                 <reportVersion></reportVersion>
+                 <reportVersion>2.14.0</reportVersion>
                  <reportDirectory>${project.build.directory}/allure-report</reportDirectory>
              </configuration>
-             </plugin>
-
-             <!-- Maven Surefire Report Plugin -->
-             <plugin>
-                 <groupId>org.apache.maven.plugins</groupId>
-                 <artifactId>maven-surefire-report-plugin</artifactId>
-                 <version>3.0.0-M5</version>
-                 <configuration>
-                     <showSuccess>true</showSuccess>
-                 </configuration>
-             </plugin>
-
-             <!-- Maven Failsafe Plugin -->
-             <plugin>
-                 <groupId>org.apache.maven.plugins</groupId>
-                 <artifactId>maven-failsafe-plugin</artifactId>
-                 <version>3.0.0-M5</version>
-                 <configuration>
-                     <includes>
-                         <include>**/IntegrationTestRunner.class</include>
-                     </includes>
-                     <parallel>methods</parallel>
-                     <threadCount>1</threadCount>
-                     <argLine>
-                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-                         -Dcucumber.plugin="io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
-                     </argLine>
-                     <systemPropertyVariables>
-                         <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
-                     </systemPropertyVariables>
-                 </configuration>
-                 <dependencies>
-                     <dependency>
-                         <groupId>org.aspectj</groupId>
-                         <artifactId>aspectjweaver</artifactId>
-                         <version>${aspectj.version}</version>
-                     </dependency>
-                 </dependencies>
-                 <executions>
-                     <execution>
-                         <goals>
-                             <goal>integration-test</goal>
-                             <goal>verify</goal>
-                         </goals>
-                     </execution>
-                 </executions>
-             </plugin>
-
-             <!-- Maven Dependency Plugin -->
-             <plugin>
-                 <groupId>org.apache.maven.plugins</groupId>
-                 <artifactId>maven-dependency-plugin</artifactId>
-                 <version>3.1.2</version>
-                 <executions>
-                     <execution>
-                         <id>copy-dependencies</id>
-                         <phase>package</phase>
-                         <goals>
-                             <goal>copy-dependencies</goal>
-                         </goals>
-                         <configuration>
-                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                         </configuration>
-                     </execution>
-                 </executions>
              </plugin>
     </plugins>
     </build>

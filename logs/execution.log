@@ -1,5 +1,157 @@
-2023-07-26 20:42:02,244 INFO [main] Connected to database successfully 
-2023-07-26 20:42:07,400 INFO [main] =============================================== 
-2023-07-26 20:42:26,322 INFO [main] Start web scenario 'Test case number = 4: adding product(-s) with discount = all to the basket where already products in the cart initial_num=1' 
-2023-07-26 20:42:27,157 INFO [main] =============================================== 
-2023-07-26 20:42:47,600 INFO [main] Authorization was successful 
+2023-07-27 11:46:32,282 INFO [main] Connected to database successfully 
+2023-07-27 11:46:32,287 INFO [main] =============================================== 
+2023-07-27 11:46:32,288 INFO [main] Start web scenario 'Test case number 1: navigation to an empty basket page' 
+2023-07-27 11:46:32,288 INFO [main] =============================================== 
+2023-07-27 11:46:36,626 INFO [main] Authorization was successful 
+2023-07-27 11:46:43,641 INFO [main] Basket icon is visible on the Navbar 
+2023-07-27 11:46:45,378 INFO [main] Click on Basket icon 
+2023-07-27 11:46:45,834 INFO [main] Basket dropdown appears 
+2023-07-27 11:46:45,932 INFO [main] =============================================== 
+2023-07-27 11:46:45,934 INFO [main] Finish web scenario 'Test case number 1: navigation to an empty basket page', status: FAILED 
+2023-07-27 11:46:45,935 INFO [main] =============================================== 
+2023-07-27 11:46:45,937 ERROR [main] Scenario failed: 
+Multiple Failures (1 failure)
+-- failure 1 --
+[Check that element Basket Dropdown is visible] 
+Expecting value to be true but was false
+at Assertions.isVisible(Assertions.java:10) 
+2023-07-27 11:46:48,210 INFO [main] Database connection closed 
+2023-07-27 11:46:48,210 INFO [main] Disconnected from database successfully 
+2023-07-27 11:46:48,261 INFO [main] =============================================== 
+2023-07-27 11:46:48,262 INFO [main] Start web scenario 'Test case number = 2: adding product(-s) with discount = no to the basket where already products in the cart initial_num=0' 
+2023-07-27 11:46:48,262 INFO [main] =============================================== 
+2023-07-27 11:46:49,970 INFO [main] Authorization was successful 
+2023-07-27 11:46:55,069 INFO [main] Basket icon is visible on the Navbar 
+2023-07-27 11:46:55,299 INFO [main] Buy products without discount 
+2023-07-27 11:46:55,355 INFO [main] Paginate to the next page 
+2023-07-27 11:46:55,966 INFO [main] Нужно взять всего товаров на 1 странице (-х) : 1 
+2023-07-27 11:46:55,967 INFO [main] Всего в коллекции на стр 1: 5 
+2023-07-27 11:46:56,421 INFO [main] Comparison of products in the basket dropdown with products to be added to the basket 
+2023-07-27 11:46:56,421 INFO [main] Click on "/"Корзина"/" button 
+2023-07-27 11:46:58,061 INFO [main] Продукт Блокнот в точку есть на складе и добавлен в корзину 
+2023-07-27 11:46:58,061 INFO [main] В корзину успешно добавлено на странице " + page + ": " + count + " товаров 
+2023-07-27 11:47:00,215 INFO [main] Basket counter is visible on the Navbar 
+2023-07-27 11:47:00,412 INFO [main] Getting basket counter value 
+2023-07-27 11:47:01,111 INFO [main] Click on Basket icon 
+2023-07-27 11:47:01,502 INFO [main] Basket dropdown appears 
+2023-07-27 11:47:01,701 INFO [main] Click on "/"Перейти в корзину"/" button 
+2023-07-27 11:47:02,262 INFO [main] Error on the Basket page should not be shown 
+2023-07-27 11:47:12,748 INFO [main] =============================================== 
+2023-07-27 11:47:12,748 INFO [main] Finish web scenario 'Test case number = 2: adding product(-s) with discount = no to the basket where already products in the cart initial_num=0', status: FAILED 
+2023-07-27 11:47:12,748 INFO [main] =============================================== 
+2023-07-27 11:47:12,748 ERROR [main] Scenario failed: Element should not be visible {.site-error}
+Element: '<div class="site-error">Server Error (#500)
+Internal server error
+There is a problem with the resource you are looking for, and it cannot be displayed.</div>'
+Actual value: visible:true
+Screenshot: file:/D:/alfa.notebook-store/build/reports/tests/1690447632502.0.png
+Page source: file:/D:/alfa.notebook-store/build/reports/tests/1690447632502.0.html
+Timeout: 10 s. 
+2023-07-27 11:47:13,880 INFO [main] Database connection closed 
+2023-07-27 11:47:13,881 INFO [main] Disconnected from database successfully 
+2023-07-27 11:47:13,884 INFO [main] =============================================== 
+2023-07-27 11:47:13,885 INFO [main] Start web scenario 'Test case number = 3: adding product(-s) with discount = yes to the basket where already products in the cart initial_num=0' 
+2023-07-27 11:47:13,885 INFO [main] =============================================== 
+2023-07-27 11:47:15,444 INFO [main] Authorization was successful 
+2023-07-27 11:47:20,681 INFO [main] Basket icon is visible on the Navbar 
+2023-07-27 11:47:20,908 INFO [main] Buy products with discount 
+2023-07-27 11:47:21,137 INFO [main] Paginate to the next page 
+2023-07-27 11:47:21,735 INFO [main] Нужно взять всего товаров на 1 странице (-х) : 1 
+2023-07-27 11:47:21,735 INFO [main] Всего в коллекции на стр 1: 3 
+2023-07-27 11:47:22,128 INFO [main] Comparison of products in the basket dropdown with products to be added to the basket 
+2023-07-27 11:47:22,128 INFO [main] Click on "/"Корзина"/" button 
+2023-07-27 11:47:23,652 INFO [main] Продукт Творческий беспорядок есть на складе и добавлен в корзину 
+2023-07-27 11:47:23,652 INFO [main] В корзину успешно добавлено на странице " + page + ": " + count + " товаров 
+2023-07-27 11:47:25,826 INFO [main] Basket counter is visible on the Navbar 
+2023-07-27 11:47:26,010 INFO [main] Getting basket counter value 
+2023-07-27 11:47:31,195 INFO [main] =============================================== 
+2023-07-27 11:47:31,195 INFO [main] Finish web scenario 'Test case number = 3: adding product(-s) with discount = yes to the basket where already products in the cart initial_num=0', status: FAILED 
+2023-07-27 11:47:31,196 INFO [main] =============================================== 
+2023-07-27 11:47:31,197 ERROR [main] Scenario failed: Element not found {By.xpath: //div[@id='navbarNav']//i[starts-with(@class, 'basket_icon')]}
+Expected: exist
+Screenshot: file:/D:/alfa.notebook-store/build/reports/tests/1690447650778.1.png
+Page source: file:/D:/alfa.notebook-store/build/reports/tests/1690447650778.1.html
+Timeout: 4 s.
+Caused by: NoSuchElementException: no such element: Unable to locate element: {"method":"xpath","selector":"//div[@id='navbarNav']//i[starts-with(@class, 'basket_icon')]"} 
+2023-07-27 11:47:32,701 INFO [main] Database connection closed 
+2023-07-27 11:47:32,701 INFO [main] Disconnected from database successfully 
+2023-07-27 11:47:32,705 INFO [main] =============================================== 
+2023-07-27 11:47:32,705 INFO [main] Start web scenario 'Test case number = 4: adding product(-s) with discount = all to the basket where already products in the cart initial_num=1' 
+2023-07-27 11:47:32,705 INFO [main] =============================================== 
+2023-07-27 11:47:34,145 INFO [main] Authorization was successful 
+2023-07-27 11:47:40,549 INFO [main] Basket icon is visible on the Navbar 
+2023-07-27 11:47:40,769 INFO [main] Buy products with and without discount 
+2023-07-27 11:47:40,802 INFO [main] Paginate to the next page 
+2023-07-27 11:47:41,479 INFO [main] Нужно взять всего товаров на 1 странице (-х) : 8 
+2023-07-27 11:47:41,479 INFO [main] Всего в коллекции на стр 1: 8 
+2023-07-27 11:47:41,865 INFO [main] Comparison of products in the basket dropdown with products to be added to the basket 
+2023-07-27 11:47:41,865 INFO [main] Click on "/"Корзина"/" button 
+2023-07-27 11:47:42,897 INFO [main] Продукт Творческий беспорядок отсутствует на складе 
+2023-07-27 11:47:43,328 INFO [main] Comparison of products in the basket dropdown with products to be added to the basket 
+2023-07-27 11:47:43,328 INFO [main] Click on "/"Корзина"/" button 
+2023-07-27 11:47:44,915 INFO [main] Продукт Блокнот в точку есть на складе и добавлен в корзину 
+2023-07-27 11:47:45,304 INFO [main] Comparison of products in the basket dropdown with products to be added to the basket 
+2023-07-27 11:47:45,305 INFO [main] Click on "/"Корзина"/" button 
+2023-07-27 11:47:47,131 INFO [main] Продукт Игра престолов есть на складе и добавлен в корзину 
+2023-07-27 11:47:47,533 INFO [main] Comparison of products in the basket dropdown with products to be added to the basket 
+2023-07-27 11:47:47,534 INFO [main] Click on "/"Корзина"/" button 
+2023-07-27 11:47:49,331 INFO [main] Продукт Кошечка Мари есть на складе и добавлен в корзину 
+2023-07-27 11:47:49,715 INFO [main] Comparison of products in the basket dropdown with products to be added to the basket 
+2023-07-27 11:47:49,716 INFO [main] Click on "/"Корзина"/" button 
+2023-07-27 11:47:51,499 INFO [main] Продукт Нотная тетрадь есть на складе и добавлен в корзину 
+2023-07-27 11:47:51,890 INFO [main] Comparison of products in the basket dropdown with products to be added to the basket 
+2023-07-27 11:47:51,890 INFO [main] Click on "/"Корзина"/" button 
+2023-07-27 11:47:53,669 INFO [main] Продукт Black&Red есть на складе и добавлен в корзину 
+2023-07-27 11:47:54,013 INFO [main] Comparison of products in the basket dropdown with products to be added to the basket 
+2023-07-27 11:47:54,014 INFO [main] Click on "/"Корзина"/" button 
+2023-07-27 11:47:55,742 INFO [main] Продукт Гусь. Дедлайн есть на складе и добавлен в корзину 
+2023-07-27 11:47:56,123 INFO [main] Comparison of products in the basket dropdown with products to be added to the basket 
+2023-07-27 11:47:56,124 INFO [main] Click on "/"Корзина"/" button 
+2023-07-27 11:47:57,896 INFO [main] Продукт Художник есть на складе и добавлен в корзину 
+2023-07-27 11:47:57,896 INFO [main] В корзину успешно добавлено на странице " + page + ": " + count + " товаров 
+2023-07-27 11:47:57,896 INFO [main] Paginate to the next page 
+2023-07-27 11:47:59,380 INFO [main] Нужно взять всего товаров на 2 странице (-х) : 1 
+2023-07-27 11:47:59,380 INFO [main] Всего в коллекции на стр 2: 7 
+2023-07-27 11:47:59,752 INFO [main] Comparison of products in the basket dropdown with products to be added to the basket 
+2023-07-27 11:47:59,752 INFO [main] Click on "/"Корзина"/" button 
+2023-07-27 11:48:01,680 INFO [main] Продукт Little Red Riding Hood есть на складе и добавлен в корзину 
+2023-07-27 11:48:01,680 INFO [main] В корзину успешно добавлено на странице " + page + ": " + count + " товаров 
+2023-07-27 11:48:03,852 INFO [main] Basket counter is visible on the Navbar 
+2023-07-27 11:48:03,998 INFO [main] Getting basket counter value 
+2023-07-27 11:48:09,090 INFO [main] =============================================== 
+2023-07-27 11:48:09,090 INFO [main] Finish web scenario 'Test case number = 4: adding product(-s) with discount = all to the basket where already products in the cart initial_num=1', status: FAILED 
+2023-07-27 11:48:09,090 INFO [main] =============================================== 
+2023-07-27 11:48:09,091 ERROR [main] Scenario failed: Element not found {By.xpath: //div[@id='navbarNav']//i[starts-with(@class, 'basket_icon')]}
+Expected: exist
+Screenshot: file:/D:/alfa.notebook-store/build/reports/tests/1690447688701.2.png
+Page source: file:/D:/alfa.notebook-store/build/reports/tests/1690447688701.2.html
+Timeout: 4 s.
+Caused by: NoSuchElementException: no such element: Unable to locate element: {"method":"xpath","selector":"//div[@id='navbarNav']//i[starts-with(@class, 'basket_icon')]"} 
+2023-07-27 11:48:10,756 INFO [main] Database connection closed 
+2023-07-27 11:48:10,757 INFO [main] Disconnected from database successfully 
+2023-07-27 11:48:10,764 INFO [main] =============================================== 
+2023-07-27 11:48:10,764 INFO [main] Start web scenario 'Test case number = 5: adding product(-s) with discount = yes to the basket where already products in the cart initial_num=0' 
+2023-07-27 11:48:10,764 INFO [main] =============================================== 
+2023-07-27 11:48:12,240 INFO [main] Authorization was successful 
+2023-07-27 11:48:18,663 INFO [main] Basket icon is visible on the Navbar 
+2023-07-27 11:48:18,914 INFO [main] Buy products with discount 
+2023-07-27 11:48:19,143 INFO [main] Paginate to the next page 
+2023-07-27 11:48:19,805 INFO [main] Нужно взять всего товаров на 1 странице (-х) : 1 
+2023-07-27 11:48:19,805 INFO [main] Всего в коллекции на стр 1: 3 
+2023-07-27 11:48:20,213 INFO [main] Comparison of products in the basket dropdown with products to be added to the basket 
+2023-07-27 11:48:20,213 INFO [main] Click on "/"Корзина"/" button 
+2023-07-27 11:48:21,953 INFO [main] Продукт Творческий беспорядок есть на складе и добавлен в корзину 
+2023-07-27 11:48:21,953 INFO [main] В корзину успешно добавлено на странице " + page + ": " + count + " товаров 
+2023-07-27 11:48:24,131 INFO [main] Basket counter is visible on the Navbar 
+2023-07-27 11:48:24,316 INFO [main] Getting basket counter value 
+2023-07-27 11:48:29,530 INFO [main] =============================================== 
+2023-07-27 11:48:29,531 INFO [main] Finish web scenario 'Test case number = 5: adding product(-s) with discount = yes to the basket where already products in the cart initial_num=0', status: FAILED 
+2023-07-27 11:48:29,531 INFO [main] =============================================== 
+2023-07-27 11:48:29,532 ERROR [main] Scenario failed: Element not found {By.xpath: //div[@id='navbarNav']//i[starts-with(@class, 'basket_icon')]}
+Expected: exist
+Screenshot: file:/D:/alfa.notebook-store/build/reports/tests/1690447709092.3.png
+Page source: file:/D:/alfa.notebook-store/build/reports/tests/1690447709092.3.html
+Timeout: 4 s.
+Caused by: NoSuchElementException: no such element: Unable to locate element: {"method":"xpath","selector":"//div[@id='navbarNav']//i[starts-with(@class, 'basket_icon')]"} 
+2023-07-27 11:48:31,204 INFO [main] Database connection closed 
+2023-07-27 11:48:31,205 INFO [main] Disconnected from database successfully 

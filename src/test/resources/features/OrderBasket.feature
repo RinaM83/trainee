@@ -20,7 +20,10 @@ Feature: Order basket
 
     Examples:
       |num| initial_num|initial_has_discount|initial_count|product_num | product_count | has_discount |
+      |2  |0           | yes                |1            |1           | 1             | no           |
+      |3  |0           | yes                |1            |1           | 1             | yes          |
       |4  |1           | yes                |1            |8           | 1             | all          |
+      |5  |0           | yes                |1            |1           | 9             | yes          |
 
 
 

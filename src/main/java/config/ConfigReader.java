@@ -14,7 +14,6 @@ public class ConfigReader {
         try {
            FileInputStream inputStream = new FileInputStream(filePath);
                 properties.load(inputStream);
-//                Loggers.info("File '{}' has been loaded" + filePath);
             } catch (FileNotFoundException e) {
             Loggers.error("Error reading file '{}' : {}" + filePath + e.getMessage()); // добавляем запись в лог при ошибке чтения файла
             e.printStackTrace();
@@ -29,7 +28,6 @@ public class ConfigReader {
         String propertyFileName = "D:/alfa.notebook-store/src/main/resources/config.properties";
         Properties props = getProperties(propertyFileName);
         String value = props.getProperty(propertyName);
-//        Loggers.info("Property '{}' has value '{}'" + propertyName + value);
         return value;
     }
 }

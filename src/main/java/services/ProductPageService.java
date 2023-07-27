@@ -8,6 +8,7 @@ import pages.blocks.BasketItem;
 import pages.blocks.ProductCard;
 
 import elements.Collection;
+import utils.Loggers;
 
 public class ProductPageService {
 
@@ -24,15 +25,18 @@ public class ProductPageService {
     private int count;
 
     public void buyAllProducts(int numProducts, String counterValue){
+        Loggers.info("Buy products with and without discount");
         buyProducts(productsPage.getAllProducts(), numProducts, counterValue);
     }
 
     public void buyProductsWithDiscount(int numProducts, String counterValue){
+        Loggers.info("Buy products with discount");
         productsPage.getProductIdForProductsWithDiscount();
         buyProducts(productsPage.getProductsWithDiscount(), numProducts, counterValue);
     }
 
     public void buyProductsWithoutDiscount(int numProducts, String counterValue) {
+        Loggers.info("Buy products without discount");
         buyProducts(productsPage.getProductsWithoutDiscount(), numProducts, counterValue);
     }
 
@@ -56,8 +60,8 @@ public class ProductPageService {
 
     private void buyProductsOnThePage(Collection<ProductCard> products, int numProducts, String counterValue, int page) {
         int size = products.size();
-        System.out.println("Нужно взять всего товаров на " + page + " странице (-х) : " + numProducts);
-        System.out.println("Всего в коллекции на стр " + page + ": " + size);
+        Loggers.info("Нужно взять всего товаров на " + page + " странице (-х) : " + numProducts);
+        Loggers.info("Всего в коллекции на стр " + page + ": " + size);
 
         count = 0;
         for (int i = 0; i < size && count < numProducts; i++) {
@@ -67,17 +71,18 @@ public class ProductPageService {
                 productCard.setProductCounterValue(counterValue);
                 productCard.buy();
                 count++;
-                System.out.println("Продукт " + productCard.getProductTitleValue() + " есть на складе в количестве 30 и добавлен в корзину");
+                Loggers.info("Продукт " + productCard.getProductTitleValue() + " есть на складе и добавлен в корзину");
+
             } else {
-                System.out.println("Продукт " + productCard.getProductTitleValue() + " отсутствует на складе в количестве 30");
+                Loggers.info("Продукт " + productCard.getProductTitleValue() + " отсутствует на складе");
             }
         }
-
-        System.out.println("В корзину успешно добавлено на странице " + page + ": " + count + " товаров.");
+        Loggers.info("В корзину успешно добавлено на странице \" + page + \": \" + count + \" товаров");
+//        System.out.println("В корзину успешно добавлено на странице " + page + ": " + count + " товаров");
     }
 
-
     public void paginateToThePage(int pageNum){
+        Loggers.info("Paginate to the next page");
         final int size = productsPage.getPaginationBtn().size();
         for (int i = 0; i < pageNum && i < size; i++){
             Button paginationButton = productsPage.getPaginationBtn().getModel(i);
@@ -87,6 +92,7 @@ public class ProductPageService {
     }
 
     public boolean isProductInBasket(String title) {
+        Loggers.info("Comparison of products in the basket dropdown with products to be added to the basket");
         basketDropdownService.openBasketDropdownByTextLabel();
         final int size = basketDropdown.getBasketItems().size();
         for (int i = 0; i < size; i++) {

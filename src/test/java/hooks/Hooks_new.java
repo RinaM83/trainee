@@ -3,10 +3,14 @@ package hooks;
 import api.AddToTheBasket_api;
 import api.ClearBasket_api;
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Screenshots;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import common.Auth_api;
+import io.cucumber.core.backend.TestCaseState;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.plugin.event.Result;
+import io.cucumber.plugin.event.Status;
 import utils.ApiUtils;
 import utils.DatabaseUtils.DatabaseConnector;
 import utils.DatabaseUtils.DatabaseManager;
@@ -14,26 +18,25 @@ import common.StepResult;
 import config.ConfigReader;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
-import io.appium.java_client.android.AndroidDriver;
 
-import java.net.URL;
-import java.net.MalformedURLException;
+import java.io.*;
+import java.lang.reflect.Field;
+
 import io.cucumber.java.*;
 import io.cucumber.plugin.event.Step;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import java.sql.SQLException;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+
 import static com.codeborne.selenide.WebDriverRunner.closeWebDriver;
 
 import org.openqa.selenium.Cookie;
 import io.qameta.allure.Allure;
-import org.openqa.selenium.OutputType;
 import utils.Loggers;
 
-import java.io.ByteArrayInputStream;
 import java.util.Objects;
 
 public class Hooks_new {
@@ -114,11 +117,11 @@ public class Hooks_new {
             WebDriverRunner.getWebDriver().manage().addCookie(new Cookie("_csrf", csrfToken));
             WebDriverRunner.getWebDriver().manage().addCookie(new Cookie("PHPSESSID", sessionValue));
             WebDriverRunner.getWebDriver().navigate().to(Configuration.baseUrl);
-    }
+        }
     }
 
     @After()
-    public void afterScenario(Scenario scenario) {
+    public void afterScenario(Scenario scenario) throws NoSuchFieldException, IllegalAccessException, FileNotFoundException {
         try {
 
             if (Objects.equals(platform, "web")) {
@@ -128,15 +131,45 @@ public class Hooks_new {
             }
             // Логируем скриншот в Allure при падении теста
             if (scenario.isFailed()) {
-                Loggers.info(String.format("Failed on step %d: %s", stepNumber, stepName));
-                Selenide.screenshot("Failure web screenshot");
-                Allure.addAttachment("Screenshot", new ByteArrayInputStream(Selenide.screenshot(OutputType.BYTES)));
-//                Allure.addAttachment("Failed step", String.valueOf(stepNumber), stepName);
+                Field delegateField = scenario.getClass().getDeclaredField("delegate");
+                delegateField.setAccessible(true);
+                TestCaseState testCaseState = (TestCaseState) delegateField.get(scenario);
+
+                Field stepResultsField = testCaseState.getClass().getDeclaredField("stepResults");
+                stepResultsField.setAccessible(true);
+                ArrayList<Result> stepResults = (ArrayList<Result>) stepResultsField.get(testCaseState);
+
+                for (Result result : stepResults) {
+                    if (result.getStatus().is(Status.FAILED)) {
+                        Loggers.error("Scenario failed: " + result.getError().getMessage());
+                    }
+                }
+
+                final String name = String.format("Screenshot_%s", scenario.getName());
+                String screenshotFolderPath = "D:/alfa.notebook-store/build/reports/tests";
+                String screenshotFilePath = screenshotFolderPath + "/" + name + ".png";
+
+                File screenshotFile = new File(screenshotFilePath);
+
+                Selenide.screenshot(name);
+                File defaultScreenshotFile = Screenshots.takeScreenShotAsFile();
+
+//                boolean moveSuccessful = defaultScreenshotFile.renameTo(screenshotFile);
+//
+//                if (moveSuccessful) {
+//                    try {
+//                        FileInputStream fileInputStream = new FileInputStream(screenshotFile);
+//                        Allure.addAttachment(name, fileInputStream);
+//                    } catch (FileNotFoundException e) {
+//                        Loggers.error("Failed to attach screenshot: " + e.getMessage());
+//                    }
+//                } else {
+//                    Loggers.error("Failed to save screenshot");
+//                }
             }
             closeWebDriver();
-
         } finally {
-//             Закрытие соединения с базой данных после каждого сценария
+            Loggers.info("Database connection closed");
             DatabaseConnector.disconnect();
         }
     }

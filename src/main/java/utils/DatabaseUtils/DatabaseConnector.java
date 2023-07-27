@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 import utils.Loggers;
 
 public class DatabaseConnector {
-//    private static final Logger logger = LogManager.getLogger(DatabaseConnector.class);
     private static Connection connection;
     private static final String PROJECT_DIR = System.getProperty("user.dir");
     private static final String CONNECTION_STRING = "jdbc:sqlite:" + PROJECT_DIR + "/database/testDB.db";

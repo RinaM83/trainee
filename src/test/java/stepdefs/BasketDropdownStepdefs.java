@@ -47,8 +47,7 @@ public class BasketDropdownStepdefs {
     }
 
     @And("on the nav bar, the Product count={word} is displayed next to the basket icon")
-    public void onTheNavBarTheNumberIsDisplayedNextToTheBasketIcon(String product_count) throws InterruptedException {
-        Thread.sleep(2000);
+    public void onTheNavBarTheNumberIsDisplayedNextToTheBasketIcon(String product_count) {
         SoftAssertions softAssertions = new SoftAssertions();
         basketDropdownService.isBasketCounterVisible(softAssertions);
         softAssertions.assertAll();
